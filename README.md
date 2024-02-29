@@ -2,6 +2,11 @@
 
 AutoCloudfareConnect is a Python script that allows you to automate the connection to Cloudflare's WARP service using scheduled tasks on Windows.
 
+## Prerequisites
+
+- This version only supports Windows operating system.
+- Cloudflare WARP must be installed on the Windows system.
+
 ## Installation
 
 To install and run AutoCloudfareConnect, follow these steps:
@@ -23,13 +28,13 @@ To install and run AutoCloudfareConnect, follow these steps:
 
 3. **Build Executables:**
    - Once PyInstaller is installed, navigate to the repository folder in the command prompt or terminal.
-   - Run the following commands to create the executable files:
+   - Run the following commands to create the executable files. The executables will be built in the `dist` folder:
      ```
      pyinstaller --onefile connect_cloudflare.py
      pyinstaller --onefile task_scheduler.py
      ```
 
-4. **Download NSIS (Nullsoft Scriptable Install System):**
+4. **Download and Install NSIS:**
    - Download and install NSIS from [https://nsis.sourceforge.io/Download](https://nsis.sourceforge.io/Download).
 
 5. **Add NSIS to System Variables (Optional):**
@@ -44,40 +49,19 @@ To install and run AutoCloudfareConnect, follow these steps:
 
 ## Usage
 
-Once you have the setup executable (`AutoCloudfareConnect_Setup.exe`), follow these steps to use the software:
+After installation, follow these steps to use AutoCloudfareConnect:
 
 1. **Run the Setup Executable:**
    - Double-click on `AutoCloudfareConnect_Setup.exe` to run the setup wizard.
-
-2. **Follow Installation Instructions:**
    - Follow the instructions in the setup wizard to complete the installation process.
 
-3. **Setup Scheduled Task:**
-   - After installation, the scheduled task will be created automatically to connect to Cloudflare's WARP service daily at the specified time (default is 00:14).
+2. **Run Task Scheduler:**
+   - Navigate to the folder where AutoCloudfareConnect is installed (default location: `C:\Program Files (x86)\AutoCloudfareConnect`).
+   - Run the `task_scheduler.exe` file.
+   - The scheduled task will be created automatically to connect to Cloudflare's WARP service daily at the specified time (default is 00:14).
 
-## Script Details
+3. **Verification:**
+   - Open Windows Task Scheduler.
+   - Go to Task Scheduler Library and find the details for the `AutoConnectCloudflare` task.
+   - Verify the path of the `connect_cloudflare.exe` in the Actions tab of the Windows Task Scheduler.
 
-The `task_scheduler.py` script creates a scheduled task on Windows to execute the `connect_cloudflare.exe` executable daily at the specified time.
-
-```python
-import subprocess
-
-def create_scheduled_task(task_name, script_path, start_time):
-    # Construct PowerShell commands to create the scheduled task
-    ps_commands = [
-        f"$taskTrigger = New-ScheduledTaskTrigger -Daily -At '{start_time}'",
-        "$taskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries:$true -DontStopIfGoingOnBatteries:$true -StartWhenAvailable:$true -DontStopOnIdleEnd:$false -RunOnlyIfNetworkAvailable:$false",
-        f"$taskAction = New-ScheduledTaskAction -Execute '{script_path}'",
-        f"Register-ScheduledTask -TaskName '{task_name}' -Action $taskAction -Trigger $taskTrigger -Settings $taskSettings"
-    ]
-    
-    # Execute PowerShell commands
-    ps_script = "\n".join(ps_commands)
-    subprocess.run(["powershell", "-Command", ps_script], check=True)
-
-if __name__ == "__main__":
-    task_name = "AutoConnectCloudflare"
-    script_path = r"C:\Program Files (x86)\AutoCloudfareConnect\connect_cloudflare.exe"
-    start_time = "00:14"
-    
-    create_scheduled_task(task_name, script_path, start_time)
