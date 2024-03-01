@@ -1,4 +1,4 @@
-# AutoCloudfareConnect
+# AutoProxyConnect
 
 AutoCloudfareConnect is a Python script that allows you to automate the connection to Cloudflare's WARP service using scheduled tasks on Windows.
 
