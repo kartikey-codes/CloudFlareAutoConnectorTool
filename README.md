@@ -13,7 +13,7 @@ To install and run AutoCloudfareConnect, follow these steps:
    - Fork this repository on GitHub to your own account.
    - Clone the forked repository to your local machine:
      ```
-     git clone https://github.com/your-username/AutoCloudfareConnect.git
+     git clone https://github.com/your-username/AutoProxyConnect.git
      ```
 
 2. **Install PyInstaller:**
